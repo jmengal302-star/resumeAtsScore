@@ -24,7 +24,7 @@ from pypdf import PdfReader
 # --------------------------------------------------------------------------- #
 # Configuration
 # --------------------------------------------------------------------------- #
-GEMINI_MODEL_DEFAULT = "gemini-2.5-flash"
+GEMINI_MODEL_DEFAULT = "gemini-3.8-flash"
 MAX_FILE_MB = 5
 MAX_RESUME_CHARS = 30_000
 MAX_JD_CHARS = 8_000
@@ -407,7 +407,6 @@ def analyze_resume(resume_text: str, job_description: str, checks_summary: str, 
             config=types.GenerateContentConfig(
                 system_instruction=SYSTEM_PROMPT,
                 response_mime_type="application/json",
-                temperature=0,
             ),
         )
         try:
@@ -575,6 +574,12 @@ def handle_analysis(uploaded, job_description: str) -> None:
             )
     except Exception as exc:  # noqa: BLE001
         st.error(f"Analysis failed: {exc}")
+        if "404" in str(exc) or "NOT_FOUND" in str(exc):
+            st.info(
+                f"The model `{get_model()}` isn't available to your API key. Set "
+                "`GEMINI_MODEL` in Streamlit Secrets to a current Gemini Flash model "
+                "(see https://ai.google.dev/gemini-api/docs/models), then reboot the app."
+            )
         return
 
     st.session_state["result"] = {
