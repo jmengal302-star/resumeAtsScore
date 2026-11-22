@@ -107,7 +107,7 @@ Create the empty repository on GitHub first and replace `YOUR-USERNAME`. **Never
 Optional secrets:
 
 ```toml
-GEMINI_MODEL = "gemini-2.5-flash"   # use another Gemini Flash model if you like
+GEMINI_MODEL = "gemini-3.8-flash"   # change this if Google retires the model again
 ```
 
 ## How the file is read
@@ -131,7 +131,7 @@ Your resume text (and job description, if you paste one) is sent to Google's Gem
 | `GEMINI_API_KEY is missing` | Add it to Secrets (cloud) or `.streamlit/secrets.toml` (local), then reboot. |
 | "I couldn't find enough text in this file" | The PDF is scanned or image-based. Export a text-based PDF or DOCX from Word or Google Docs. |
 | `Analysis failed: ... 429` / quota errors | You hit the free Gemini rate limit. Wait a minute and try again. |
-| `Analysis failed: ... 404` / model not found | Set `GEMINI_MODEL` in Secrets to a Gemini model your key can use. |
+| `Analysis failed: ... 404 NOT_FOUND` (model no longer available) | Google retires old models. The app defaults to `gemini-3.8-flash`. If that is ever retired too, set `GEMINI_MODEL` in Secrets to the current Flash model from https://ai.google.dev/gemini-api/docs/models and reboot. |
 | `Analysis failed: ... API key not valid` | Create a new key at https://aistudio.google.com/apikey and update Secrets. |
 | `ModuleNotFoundError` on deploy | Check `requirements.txt` is in the repo root and the app was redeployed. |
 | "Gemini returned an unreadable answer" | Click **Analyze resume** again. |
@@ -140,4 +140,4 @@ Your resume text (and job description, if you paste one) is sent to Google's Gem
 
 - **Score weights and labels:** edit `SCORE_WEIGHTS` and `SCORE_LABELS` in `app.py`.
 - **Instructions to Gemini:** edit `SYSTEM_PROMPT` in `app.py`.
-- **Automated checks:** edit `run_local_checks()` in `app.py`.# resumeAtsScore
+- **Automated checks:** edit `run_local_checks()` in `app.py`.
